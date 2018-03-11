@@ -28,13 +28,17 @@ class MainActivity : AppCompatActivity() {
             var input=findViewById<EditText>(R.id.etName)
             var output=findViewById<TextView>(R.id.tvOutput)
             var id:Int=view.getId()
-            var inputStr:String?=null
+            var inputStr:String
 
             when(id){
-                R.id.btClick -> inputStr=input.getText().toString()
-                tvOutput.text=inputStr+"さん、こんにちは"
-
-                R.id.btClear->input
+                R.id.btClick->{
+                    inputStr=input.getText().toString()
+                    output.text=inputStr+"さん、こんにちは"
+                }
+                R.id.btClear->{
+                    input.text=null
+                    output.text=null
+                }
             }
         }
     }
