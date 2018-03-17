@@ -3,7 +3,7 @@ package sample.kouta.menusample
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import android.view.*
 import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.SimpleAdapter
@@ -29,6 +29,13 @@ class MainActivity : AppCompatActivity() {
         _lvMenu?.adapter=adapter
         _lvMenu?.setOnItemClickListener(ListItemClickListener())
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        var inflater=getMenuInflater()
+        inflater.inflate(R.menu.menu_options_menu_list,menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
     fun createTeisyokuList() : List<Map<String,Any>>{
         var menuList=ArrayList<Map<String,Any>>()
         var menu =HashMap<String,Any>()
@@ -113,5 +120,75 @@ class MainActivity : AppCompatActivity() {
 
             startActivity(intent)
         }
+    }
+
+    fun createCurryList():List<Map<String,Any>>{
+        var menuList=ArrayList<Map<String,Any>>()
+        var menu=HashMap<String,Any>()
+
+        menu.put("name","ビーフカレー")
+        menu.put("price",520)
+        menu.put("desc","特選スパイスをきかせた国産ビーフ100%のカレーです。")
+        menuList.add(menu)
+
+        menu= HashMap()
+        menu.put("name","ポークカレー")
+        menu.put("price",420)
+        menu.put("desc","特選スパイスをきかせた国産ポーク100%のカレーです。")
+        menuList.add(menu)
+
+        menu= HashMap()
+        menu.put("name","ハンバーグカレー")
+        menu.put("price",620)
+        menu.put("desc","特選スパイスをきかせた国産肉100%のハンバーグカレーです。")
+        menuList.add(menu)
+
+        menu= HashMap()
+        menu.put("name","チーズカレー")
+        menu.put("price",560)
+        menu.put("desc","特選スパイスをきかせた国産チーズ100%のカレーです。")
+        menuList.add(menu)
+
+        menu= HashMap()
+        menu.put("name","カツカレー")
+        menu.put("price",760)
+        menu.put("desc","特選スパイスをきかせた国産肉100%のカツカレーです。")
+        menuList.add(menu)
+
+        menu= HashMap()
+        menu.put("name","ビーフカツカレー")
+        menu.put("price",880)
+        menu.put("desc","特選スパイスをきかせた国産ビーフ100%で作ったカツのカレーです。")
+        menuList.add(menu)
+
+        menu= HashMap()
+        menu.put("name","からあげカレー")
+        menu.put("price",540)
+        menu.put("desc","特選スパイスをきかせた国産鶏肉100%で作ったからあげのカレーです。")
+        menuList.add(menu)
+
+        return menuList
+    }
+
+
+   override fun onOptionsItemSelected(item:MenuItem):Boolean{
+        var itemId=item.itemId
+
+       when(itemId){
+           R.id.menuListOptionTeisyoku->
+                   _menuList=createTeisyokuList()
+           R.id.menuListOptionCurry->
+                   _menuList=createCurryList()
+       }
+       var adapter=SimpleAdapter(this@MainActivity,_menuList,R.layout.row,FROM,TO)
+       _lvMenu!!.adapter=adapter
+       return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu?, view: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, view, menuInfo)
+        var inflater=menuInflater
+        inflater.inflate(R.menu.menu_context_menu_list,menu)
+        menu.setHeaderTitle(R.string.menu_list_context_header)
     }
 }
