@@ -1,5 +1,6 @@
 package sample.kouta.menusample
 
+import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.view.*
 import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.SimpleAdapter
+import android.widget.Toast
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -28,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         var adapter=SimpleAdapter(this@MainActivity,_menuList,R.layout.row,FROM,TO)
         _lvMenu?.adapter=adapter
         _lvMenu?.setOnItemClickListener(ListItemClickListener())
+        registerForContextMenu(_lvMenu)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -109,16 +112,7 @@ class MainActivity : AppCompatActivity() {
     inner class ListItemClickListener: AdapterView.OnItemClickListener{
         override fun onItemClick(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
             var item=parent.getItemAtPosition(position) as Map<String,Any>
-
-            var menuName=item.get("name") as String
-            var menuPrice=item.get("price") as Integer
-
-            var intent= Intent(this@MainActivity,Main2Activity::class.java)
-
-            intent.putExtra("menuName",menuName)
-            intent.putExtra("menuPrice","  $menuPrice 円")
-
-            startActivity(intent)
+            order(item)
         }
     }
 
@@ -189,6 +183,30 @@ class MainActivity : AppCompatActivity() {
         super.onCreateContextMenu(menu, view, menuInfo)
         var inflater=menuInflater
         inflater.inflate(R.menu.menu_context_menu_list,menu)
-        menu.setHeaderTitle(R.string.menu_list_context_header)
+        menu!!.setHeaderTitle(R.string.menu_list_context_header)
+    }
+    fun order(menu:Map<String,Any>){
+        var menuName=menu.get("name") as String
+        var menuPrice=menu.get("price") as String
+        var intent =Intent(this@MainActivity,Main2Activity::class.java)
+        intent.putExtra("menuName",menuName)
+        intent.putExtra("menuPrice",menuPrice)
+        startActivity(intent)
+    }
+
+    override fun onContextItemSelected(item: MenuItem?): Boolean {
+        var info=item!!.menuInfo as AdapterView.AdapterContextMenuInfo
+        var listPosition=info.position
+        var menu =_menuList!!.get(listPosition)
+        var itemId=item.itemId
+        when(itemId){
+            R.id.menuListContextDesc ->{
+                var desc=menu.get("desc") as String
+                Toast.makeText(this@MainActivity,desc,Toast.LENGTH_LONG)
+            }
+            R.id.menuListContextOrder->
+                    order(menu)
+        }
+        return super.onContextItemSelected(item)
     }
 }
