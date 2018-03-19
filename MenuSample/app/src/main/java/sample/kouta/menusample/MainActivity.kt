@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
         return menuList
     }
     inner class ListItemClickListener: AdapterView.OnItemClickListener{
-        override fun onItemClick(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
             var item=parent.getItemAtPosition(position) as Map<String,Any>
             order(item)
         }
@@ -187,10 +187,10 @@ class MainActivity : AppCompatActivity() {
     }
     fun order(menu:Map<String,Any>){
         var menuName=menu.get("name") as String
-        var menuPrice=menu.get("price") as String
+        var menuPrice=menu.get("price") as Integer
         var intent =Intent(this@MainActivity,Main2Activity::class.java)
         intent.putExtra("menuName",menuName)
-        intent.putExtra("menuPrice",menuPrice)
+        intent.putExtra("menuPrice","$menuPrice 円")
         startActivity(intent)
     }
 
@@ -202,7 +202,7 @@ class MainActivity : AppCompatActivity() {
         when(itemId){
             R.id.menuListContextDesc ->{
                 var desc=menu.get("desc") as String
-                Toast.makeText(this@MainActivity,desc,Toast.LENGTH_LONG)
+                Toast.makeText(this@MainActivity,desc,Toast.LENGTH_LONG).show()
             }
             R.id.menuListContextOrder->
                     order(menu)
