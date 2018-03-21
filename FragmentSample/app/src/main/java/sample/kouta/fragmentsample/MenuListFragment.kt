@@ -11,9 +11,6 @@ import android.widget.ListView
 import android.widget.SimpleAdapter
 
 
-/**
- * A simple [Fragment] subclass.
- */
 class MenuListFragment : Fragment() {
 
     var _parentActivity:Activity?=null
