@@ -2,11 +2,13 @@ package sample.kouta.fragmentsample
 
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.SimpleAdapter
 
@@ -85,8 +87,26 @@ class MenuListFragment : Fragment() {
 
         var adapter = SimpleAdapter(_parentActivity,menuList,android.R.layout.simple_list_item_2,from,to)
         lvMenu.adapter=adapter
+
+        lvMenu.setOnItemClickListener(ListItemClickListener())
+
         return view
 
+    }
+    inner class ListItemClickListener: AdapterView.OnItemClickListener{
+        override fun onItemClick(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+            var item=parent.getItemAtPosition(position) as Map<String,String>
+
+            var menuName=item.get("name")
+            var menuPrice=item.get("price")
+
+            var intent= Intent(_parentActivity,MenuListActivity::class.java)
+
+            intent.putExtra("menuName",menuName)
+            intent.putExtra("menuPrice",menuPrice)
+
+            startActivity(intent)
+        }
     }
 
 }
