@@ -5,9 +5,8 @@
     android:layout_height="match_parent">
 
     <fragment
-        android:id="@+id/fragmentMenulist"
+        android:id="@+id/fragmentMenuList"
         android:name="sample.kouta.fragmentsample.MenuListFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </fragment>
+        android:layout_height="match_parent"/>
 </FrameLayout>
