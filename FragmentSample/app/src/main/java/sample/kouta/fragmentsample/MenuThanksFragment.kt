@@ -14,17 +14,30 @@ import android.widget.TextView
 class MenuThanksFragment:Fragment(){
 
     var _parentActivity: Activity?=null
+    var _isLayoutXLarge:Boolean=true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _parentActivity=activity
+
+        var manager=fragmentManager
+        var menuListFragment=manager.findFragmentById(R.id.fragmentMenuList)
+
+        if(menuListFragment==null){
+            _isLayoutXLarge=false
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view=inflater!!.inflate(R.layout.fragment_menu_thanks,container,false)
-        var intent=_parentActivity!!.intent
+        var extras:Bundle?=null
 
-        var extras=intent.extras
+        if(_isLayoutXLarge){
+            extras=arguments
+        }else{
+            var intent=_parentActivity!!.intent
+            extras=intent.extras
+        }
 
         var menuName=""
         var menuPrice=""
@@ -45,8 +58,15 @@ class MenuThanksFragment:Fragment(){
         return view
     }
     inner class ButtonClickListener:View.OnClickListener{
-        override fun onClick(v: View?) {
-            _parentActivity!!.finish()
+        override fun onClick(view: View) {
+            if(_isLayoutXLarge){
+                var manager=fragmentManager
+                var transaction=manager.beginTransaction()
+                transaction.remove(this@MenuThanksFragment)
+                transaction.commit()
+            }else {
+                _parentActivity!!.finish()
+            }
         }
     }
 }

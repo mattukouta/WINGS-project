@@ -2,9 +2,11 @@ package sample.kouta.fragmentsample
 
 
 import android.app.Activity
+import android.app.FragmentManager
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentTransaction
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +18,20 @@ import java.util.HashMap
 
 class MenuListFragment : Fragment() {
     var _parentActivity:Activity?=null
+    var _isLayoutXLarge=true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _parentActivity=activity
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        var menuThanksFrame=_parentActivity!!.findViewById<View>(R.id.menuThanksFrame)
+
+        if (menuThanksFrame==null){
+            _isLayoutXLarge=false
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -95,16 +107,28 @@ class MenuListFragment : Fragment() {
     inner class ListItemClickListener: AdapterView.OnItemClickListener{
         override fun onItemClick(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
             var item=parent.getItemAtPosition(position) as Map<String,String>
-
             var menuName=item.get("name")
             var menuPrice=item.get("price")
 
-            var intent= Intent(_parentActivity,MenuThanksActivity::class.java)
+            var bundle:Bundle=Bundle()
+            bundle.putString("menuName",menuName)
+            bundle.putString("menuPrice",menuPrice)
 
-            intent.putExtra("menuName",menuName)
-            intent.putExtra("menuPrice",menuPrice)
+            if(_isLayoutXLarge){
+                var manager:android.support.v4.app.FragmentManager=fragmentManager
+                var transaction:FragmentTransaction=manager.beginTransaction()
+                var menuThanksFragment:MenuThanksFragment=MenuThanksFragment()
 
-            startActivity(intent)
+                menuThanksFragment.setArguments(bundle)
+                transaction.replace(R.id.menuThanksFrame,menuThanksFragment)
+                transaction.commit()
+            }else{
+                var intent= Intent(_parentActivity,MenuThanksActivity::class.java)
+
+                intent.putExtras(bundle)
+
+                startActivity(intent)
+            }
         }
     }
 }
