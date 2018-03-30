@@ -1,5 +1,8 @@
 package sample.kouta.databasesample
 
+import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteStatement
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -24,20 +27,20 @@ class CocktailMemoActivity : AppCompatActivity() {
 
     fun onSaveButtonClick(view:View){
         var etNote=findViewById<EditText>(R.id.etNote)
-        var note=etNote.getText().toString()
-        var helper=DatabaseHelper(this@CocktailMemoActivity)
-        var db=helper.getWritableDatabase()
+        var note:String=etNote.getText().toString()
+        var helper:DatabaseHelper=DatabaseHelper(this@CocktailMemoActivity)
+        var db:SQLiteDatabase=helper.getWritableDatabase()
 
         try {
-            var sqlDelete="DELETE FROM cocktailmemo WHERE _id = ?"
-            var stmt=db.compileStatement(sqlDelete)
-            stmt.bindLong(1, _cocktailId as Long)
+            var sqlDelete:String="DELETE FROM cocktailmemo WHERE _id = ?"
+            var stmt:SQLiteStatement=db.compileStatement(sqlDelete)
+            stmt.bindLong(1, _cocktailId.toLong())
             stmt.executeUpdateDelete()
 
-            var sqlInsert="INSERT INTO cocktailmemo (_id,name,note) VALUES (?,?,?)"
+            var sqlInsert:String="INSERT INTO cocktailmemo (_id,name,note) VALUES (?,?,?)"
             stmt=db.compileStatement(sqlInsert)
 
-            stmt.bindLong(1,_cocktailId as Long)
+            stmt.bindLong(1,_cocktailId.toLong())
             stmt.bindString(2,_cocktailName)
             stmt.bindString(3,note)
 
@@ -52,26 +55,27 @@ class CocktailMemoActivity : AppCompatActivity() {
         _btnSave!!.setEnabled(false)
     }
      inner class ListItemClickListener:AdapterView.OnItemClickListener{
-         override fun onItemClick(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+         override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
          _cocktailId=position
-         _cocktailName= parent!!.getItemAtPosition(position) as String
+         _cocktailName= parent.getItemAtPosition(position) as String
          _tvCocktailName!!.setText(_cocktailName)
          _btnSave!!.setEnabled(true)
 
-             var helper=DatabaseHelper(this@CocktailMemoActivity)
-             var db=helper.writableDatabase
+             var helper:DatabaseHelper=DatabaseHelper(this@CocktailMemoActivity)
+             var db:SQLiteDatabase=helper.getWritableDatabase()
              try {
-                 var sql="SELECT * FROM cocktailmemo WHERE _id = " + _cocktailId
+                 var sql="SELECT * FROM cocktailmemo WHERE _id =" + _cocktailId
 
-                 var cursor=db.rawQuery(sql,null)
-                 var note=""
+                 var cursor:Cursor=db.rawQuery(sql,null)
+                 var note:String?=""
                  while (cursor.moveToNext()){
-                     var idxNote=cursor.getColumnIndex("note")
+                     var idxNote:Int=cursor.getColumnIndex("note")
                      note=cursor.getString(idxNote)
                  }
 
                  var etNote=findViewById<EditText>(R.id.etNote)
                  etNote.setText(note)
+
              }
              finally {
                  db.close()
