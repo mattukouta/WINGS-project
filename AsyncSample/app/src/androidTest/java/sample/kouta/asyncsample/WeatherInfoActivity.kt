@@ -140,9 +140,9 @@ class WeatherInfoActivity : AppCompatActivity() {
             var reader = BufferedReader(InputStreamReader(Is, "UTF-8"))
             var sb = StringBuffer()
             var b = CharArray(1024)
-            var line: Int = reader.read(b)
+            var line: Int
 
-            while (0 <= (line)) {
+            while ({line=reader.read(b);line}()!=0) {
                 sb.append(b, 0, line)
             }
             return sb.toString()
