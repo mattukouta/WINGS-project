@@ -31,20 +31,20 @@ class WeatherInfoActivity : AppCompatActivity() {
         var cityList =ArrayList<Map<String,String>>()
 
         var city=HashMap<String,String>()
-        city.put("name","大阪")
-        city.put("id","270000")
+        city["name"]="大阪"
+        city["id"]="270000"
         cityList.add(city)
 
         city=HashMap()
-        city.put("name","神戸")
-        city.put("id","280010")
+        city["name"]="神戸"
+        city["id"]="280010"
         cityList.add(city)
-//
-//        city=HashMap()
-//        city.put("name","豊橋")
-//        city.put("id","290000")
-//        cityList.add(city)
-//
+
+        city=HashMap()
+        city["name"]="函館"
+        city["id"]="017010"
+        cityList.add(city)
+
 //        city=HashMap()
 //        city.put("name","京都")
 //        city.put("id","300000")
@@ -78,18 +78,18 @@ class WeatherInfoActivity : AppCompatActivity() {
         var from= arrayOf("name")
         var to= intArrayOf(android.R.id.text1)
         var adapter=SimpleAdapter(this@WeatherInfoActivity,cityList,android.R.layout.simple_expandable_list_item_1,from,to)
-        lvCityList.setAdapter(adapter)
-        lvCityList.setOnItemClickListener(ListItemClickListener())
+        lvCityList.adapter=adapter
+        lvCityList.onItemClickListener=ListItemClickListener()
     }
 
     inner class ListItemClickListener : AdapterView.OnItemClickListener{
         override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             var item = parent!!.getItemAtPosition(position) as Map<String,String>
-            var cityName=item.get("name")
-            var cityId=item.get("id")
+            var cityName=item["name"]
+            var cityId=item["id"]
             var tvCityName=findViewById<TextView>(R.id.tvCityName)
 
-            tvCityName.setText(cityName+"の天気: ")
+            tvCityName.text=cityName+"の天気: "
 
             var tvWeatherTelop=findViewById<TextView>(R.id.tvWeatherTelop)
             var tvWeatherDesc=findViewById<TextView>(R.id.tvWeatherDesc)
@@ -98,7 +98,7 @@ class WeatherInfoActivity : AppCompatActivity() {
         }
     }
 
-    inner class WeatherInfoReceiver(var _tvWeatherTelop:TextView=tvWeatherTelop, var _tvWeatherDesc:TextView=tvWeatherDesc) : AsyncTask<String,String,String>(){
+    inner class WeatherInfoReceiver(var _tvWeatherTelop:TextView, var _tvWeatherDesc:TextView) : AsyncTask<String,String,String>(){
 
         override fun doInBackground(vararg params: String): String {
             var id=params[0]
@@ -111,7 +111,7 @@ class WeatherInfoActivity : AppCompatActivity() {
             try {
                 var url= URL(urlStr)
                 con=url.openConnection() as HttpURLConnection
-                con.setRequestMethod("GET")
+                con.requestMethod="GET"
                 con.connect()
                 Is=con.getInputStream()
                 result=is2String(Is)
@@ -134,20 +134,6 @@ class WeatherInfoActivity : AppCompatActivity() {
             }
             return result
         }
-
-        @Throws(IOException::class)
-        fun is2String(Is:InputStream): String{
-            var reader = BufferedReader(InputStreamReader(Is, "UTF-8"))
-            var sb = StringBuffer()
-            var b = CharArray(1024)
-            var line: Int
-
-            while ({line=reader.read(b);line}()!=0) {
-                sb.append(b, 0, line)
-            }
-            return sb.toString()
-        }
-
         override fun onPostExecute(result: String?) {
             var telop = ""
             var desc = ""
@@ -166,6 +152,19 @@ class WeatherInfoActivity : AppCompatActivity() {
 
             _tvWeatherTelop.setText(telop)
             _tvWeatherDesc.setText(desc)
+        }
+        @Throws(IOException::class)
+        fun is2String(Is:InputStream): String{
+            var reader = BufferedReader(InputStreamReader(Is, "UTF-8"))
+            var sb = StringBuffer()
+            var b = CharArray(1024)
+            var line: Int=reader.read(b)
+
+            while (0<=line) {
+                sb.append(b, 0, line)
+                line=reader.read(b)
+            }
+            return sb.toString()
         }
     }
 }
