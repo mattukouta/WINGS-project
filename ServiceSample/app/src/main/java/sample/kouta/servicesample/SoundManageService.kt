@@ -1,9 +1,6 @@
 package sample.kouta.servicesample
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
@@ -58,6 +55,19 @@ class SoundManageService : Service() {
     inner class PlayerPreparedListener : MediaPlayer.OnPreparedListener{
         override fun onPrepared(mp: MediaPlayer?) {
             mp!!.start()
+
+            var builder=NotificationCompat.Builder(this@SoundManageService,"soundmanagerservice_notification_channel")
+            builder.setSmallIcon(android.R.drawable.ic_dialog_info)
+            builder.setContentTitle(getString(R.string.msg_notification_title_start))
+            builder.setContentText(getString(R.string.msg_notification_text_start))
+            var intent=Intent(this@SoundManageService,SoundStartActivity::class.java)
+            intent.putExtra("fromNotification",true)
+            var stopServiceIntent=PendingIntent.getActivity(this@SoundManageService,0,intent,PendingIntent.FLAG_CANCEL_CURRENT)
+            builder.setContentIntent(stopServiceIntent)
+            builder.setAutoCancel(true)
+            var notification=builder.build()
+            var manager=getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.notify(1,notification)
         }
     }
     inner class PlayerCompletionListener : MediaPlayer.OnCompletionListener{
