@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">ツールバーサンプル</string>
+    <string name="tv_article">吾輩わがはいは猫である。名前はまだ無い。\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで\nどこで</string>
+    <string name="toolbar_title">Material!</string>
+    <string name="toolbar_subtitle">ツールバーを使用</string>
+</resources>
